@@ -15,21 +15,9 @@
 	</head>
 	<body>
 
-<?php 
-
-	//date_default_timezone_set('Europe/Paris');setlocale(LC_TIME, 'french');$
-	
-	$intl_date_formatter = new IntlDateFormatter('fr_FR',
-                                             IntlDateFormatter::FULL,
-                                             IntlDateFormatter::NONE);
-
-	$date = new DateTime();	
-
-?>
-
 	<div class="row justify-content-center topSpace">
-		<div class="col-9 alert alert-dark" role="alert">
-		  <?php echo $intl_date_formatter->format($date); ?>
+		<div id="date" class="col-9 alert alert-dark" role="alert">
+		  
 		</div>
 	</div>
 
@@ -40,7 +28,7 @@
 						<div class="float-right">
 				    		<i class="fas fa-info-circle"></i>
 				    	</div>
-				    	<p class="h5">Aller : 8h15 Chanzy</p>
+				    	<p class="h5" id="aller">Aller : 8H15 Chanzy</p>
 
 				  </div>
 				  <img src="images/maps.jpg" class="card-img-top h16-9" alt="Card image cap">
@@ -57,7 +45,7 @@
 			<div class="col-10 col-lg-6">
 				<div class="card">
 					<div class="card-header">
-				    	<p class="h5">Retour : <?php echo (($date->format('N') == 3 || $date->format('N') == 5)?"17h15":"17h45"); ?> Oudalle</p>
+				    	<p class="h5" id="retour">Retour : ??? Oudalle</p>
 				  	</div>
 				  <img src="images/maps.jpg" class="card-img-top h16-9" alt="Card image cap">
 				  <div class="card-body">
@@ -75,5 +63,12 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 		<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="scripts/main.js"></script>
+		<script>
+
+			var date = new Date();
+
+			refreshDate();
+
+		</script>
 	</body>
 </html>
