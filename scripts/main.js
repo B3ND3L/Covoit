@@ -14,7 +14,16 @@ gesuredZone.addEventListener('touchend', function(event) {
     touchendX = event.changedTouches[0].screenX;
     touchendY = event.changedTouches[0].screenY;
     handleGesure();
-}, false); 
+}, false);
+
+$(".btn").click(function(event){
+
+  var tmp = $(this).prop('id').split('_');
+  var dispo = tmp[0];
+  var time = tmp[1];
+
+  ws.send('{"dispo":"'+dispo+'","time":"'+time+'","date":"'+(date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear())+'"}');
+});
 
 function handleGesure() {
     var swiped = 'swiped: ';
