@@ -75,12 +75,22 @@
 
         var mapA = new google.maps.Map(document.getElementById('mapA'), {
           center: chanzy,
-          zoom: 7
+          zoom: 7,
+					fullscreenControl : false,
+					mapTypeControl : false,
+					scaleControl : false,
+					streetViewControl : false,
+					zoomControl : false
         });
 
 				var mapR = new google.maps.Map(document.getElementById('mapR'), {
           center: batB,
-          zoom: 7
+          zoom: 7,
+					fullscreenControl : false,
+					mapTypeControl : false,
+					scaleControl : false,
+					streetViewControl : false,
+					zoomControl : false
         });
 
         var directionsDisplayA = new google.maps.DirectionsRenderer({
