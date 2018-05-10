@@ -17,7 +17,7 @@
 
 	<div class="row justify-content-center topSpace">
 		<div id="date" class="col-9 alert alert-dark" role="alert">
-		  
+
 		</div>
 	</div>
 
@@ -66,7 +66,8 @@
 		<script>
 
 			var date = new Date();
-
+			//CHANGE LOCALHOST WITH SERVER'S DOMAIN
+			var ws = new WebSocket("ws://localhost:3000");
 			refreshDate();
 
 		</script>
