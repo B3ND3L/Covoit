@@ -21,8 +21,20 @@ $(".btn").click(function(event){
   var tmp = $(this).prop('id').split('_');
   var dispo = tmp[0];
   var time = tmp[1];
+  var update = $(this).val();
+  if(update == '1'){
+    $(this).removeClass('btn-'+((dispo==="out")?"danger":"success")).addClass('btn-outline-'+((dispo==="out")?"danger":"success"));
+    $(this).val('0');
+  } else {
+    $(this).removeClass('btn-outline-'+((dispo==="out")?"danger":"success")).addClass('btn-'+((dispo==="out")?"danger":"success"));
+    $(this).val('1');
+  }
+  if($("#"+(dispo==="out"?"in":"out")+"_"+time).hasClass('btn-'+(dispo==="out"?"success":"danger"))){
+    $("#"+(dispo==="out"?"in":"out")+"_"+time).removeClass('btn-'+((dispo==="out")?"success":"danger")).addClass('btn-outline-'+((dispo==="out")?"success":"danger"));
+    $("#"+(dispo==="out"?"in":"out")+"_"+time).val('0');
+  }
 
-  ws.send('{"dispo":"'+dispo+'","time":"'+time+'","date":"'+(date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear())+'"}');
+  ws.send('{"dispo":"'+dispo+'","time":"'+time+'","date":"'+(date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear())+'","update":'+update+',"event" : "click"}');
 });
 
 function handleGesure() {
