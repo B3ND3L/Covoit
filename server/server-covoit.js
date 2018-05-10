@@ -36,10 +36,21 @@ wss.on('connection', function(client) {
 			return 0;
     }
     console.log(data);
-	  var sql = "SELECT * FROM Users";
-	  con.query(sql, function (err, result) {
-	    if (err) throw err;
-	    console.log(result);
-	  });
+
+
+		switch(data.event){
+			case 'click' :
+					var sql = '';
+					if(data.update === 1){
+						sql = "UPDATE Participations SET participe="+data.dispo+" WHERE idUser=1 AND periode='"+data.time+"' AND date='"+data.date+"'";
+					} else {
+						sql = "INSERT INTO Participations (idUser, periode, date, participe) VALUES (1,'"+data.time+"','"+data.date+"',"+data.dispo+")";
+					}
+					con.query(sql, function (err, result) {
+						if (err) throw err;
+						console.log(result);
+					});
+				break;
+		}
   });
 });

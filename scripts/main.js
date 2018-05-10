@@ -21,8 +21,13 @@ $(".btn").click(function(event){
   var tmp = $(this).prop('id').split('_');
   var dispo = tmp[0];
   var time = tmp[1];
-  var update = $(this).val();
-  if(update == '1'){
+
+  var update = $(this).data('update');
+
+  $("#out_"+time).data('update',1);
+  $("#in_"+time).data('update',1);
+
+  if($(this).val() == '1'){
     $(this).removeClass('btn-'+((dispo==="out")?"danger":"success")).addClass('btn-outline-'+((dispo==="out")?"danger":"success"));
     $(this).val('0');
   } else {
@@ -34,7 +39,7 @@ $(".btn").click(function(event){
     $("#"+(dispo==="out"?"in":"out")+"_"+time).val('0');
   }
 
-  ws.send('{"dispo":"'+dispo+'","time":"'+time+'","date":"'+(date.getDate()+"/"+date.getMonth()+"/"+date.getFullYear())+'","update":'+update+',"event" : "click"}');
+  ws.send('{"dispo":"'+(dispo=='in'?1:0)+'","time":"'+time+'","date":"'+(date.getFullYear()+"-"+date.getMonth().toString().padStart(2,'0')+"-"+date.getDate())+'","update":'+update+',"event" : "click"}');
 });
 
 function handleGesure() {
