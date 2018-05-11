@@ -51,6 +51,10 @@ wss.on('connection', function(client) {
 						console.log(result);
 					});
 				break;
+			case 'connexion' : 
+				console.log('connexion faite');
+				client.send('{"Reponse" : "OK"}')
+				break;
 		}
   });
 });

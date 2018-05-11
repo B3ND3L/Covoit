@@ -3,6 +3,8 @@ var touchstartY = 0;
 var touchendX = 0;
 var touchendY = 0;
 
+var ws = new WebSocket("ws://"+document.location.href.split('/')[2]+":3000");
+
 var gesuredZone = document.body; //document.getElementById('gesuredZone');
 
 gesuredZone.addEventListener('touchstart', function(event) {

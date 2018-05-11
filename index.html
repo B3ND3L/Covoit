@@ -20,8 +20,6 @@
 	    <div class="modal-content">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="connexionLabel">Connexion</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
@@ -103,13 +101,12 @@
 			if(cookies['login'] === undefined){
 
 				$("#connexion").modal({
-					keyboard: false
+					keyboard: false,
+					backdrop : 'static'
 				});
 			}
 
 			var date = new Date();
-			//CHANGE LOCALHOST WITH SERVER'S DOMAIN
-			var ws = new WebSocket("ws://"+document.location.href.split('/')[2]+":3000");
 			refreshDate();
 
 		</script>
