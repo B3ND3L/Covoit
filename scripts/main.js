@@ -47,14 +47,19 @@ function handleGesure() {
 
     var deltaX = window.innerWidth/10;
     var deltaY = window.innerHeight/10;
+    var diffX = Math.abs(touchendX-touchstartX);
+    var diffY = Math.abs(touchendY-touchstartY);
 
-    if (touchendX+deltaX < touchstartX) {
-        console.log(swiped + 'right!');
+    console.log(diffX);
+    console.log(diffY);
+
+    if (touchendX+deltaX < touchstartX && diffX>(diffY)*3) {
+        //console.log(swiped + 'right!');
         swipeDate(getNextDay());
 
     }
-    if (touchendX-deltaX > touchstartX) {
-        console.log(swiped + 'left!');
+    if (touchendX-deltaX > touchstartX  && diffX>(diffY)*3) {
+        //console.log(swiped + 'left!');
         swipeDate(getPrevDay());
     }
     /*if (touchendY < touchstartY) {
@@ -64,7 +69,7 @@ function handleGesure() {
         alert(swiped + 'left!');
     }*/
     if (touchendY == touchstartY) {
-        console.log('tap!');
+        //console.log('tap!');
     }
 }
 
