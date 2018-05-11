@@ -15,6 +15,34 @@
 	</head>
 	<body>
 
+	<div class="modal fade" id="connexion" tabindex="-1" role="dialog" aria-labelledby="connexionLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="connexionLabel">Connexion</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <form>
+	          <div class="form-group">
+	            <label for="login" class="col-form-label">Login : </label>
+	            <input type="text" class="form-control" id="login">
+	          </div>
+	          <div class="form-group">
+	            <label for="password" class="col-form-label">Mot de passe :</label>
+	            <input type="password" class="form-control" id="password"></textarea>
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button id="connexionButton" type="button" class="btn btn-primary">Connexion</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 	<div class="row justify-content-center topSpace">
 		<div id="date" class="col-9 alert alert-dark" role="alert">
 
@@ -34,8 +62,8 @@
 				  <div id="mapA" class="card-img-top h16-9"></div>
 				  <div class="card-body">
 				    <div class="row justify-content-center">
-						<div class="col-6"><button type="button" data-update="0" value=0 id="in_m" class="btn btn-lg btn-block btn-outline-success"><i class="fas fa-thumbs-up"></i> IN</button></div>
-						<div class="col-6"><button type="button" data-update="0" value=0 id="out_m" class="btn btn-lg btn-block btn-outline-danger"><i class="fas fa-thumbs-down"></i> OUT</button></div>
+						<div class="col-6"><button type="button" data-update="0" value=0 id="in_m" class="btn btn-lg btn-block btn-outline-success btn-dispo"><i class="fas fa-thumbs-up"></i> IN</button></div>
+						<div class="col-6"><button type="button" data-update="0" value=0 id="out_m" class="btn btn-lg btn-block btn-outline-danger btn-dispo"><i class="fas fa-thumbs-down"></i> OUT</button></div>
 					</div>
 				  </div>
 				</div>
@@ -50,80 +78,40 @@
 				  <div id="mapR" class="card-img-top h16-9"></div>
 				  <div class="card-body">
 				    <div class="row justify-content-center">
-						<div class="col-6"><button type="button" data-update="0" value=0 id="in_a" class="btn btn-lg btn-block btn-outline-success"><i class="fas fa-thumbs-up"></i> IN</button></div>
-						<div class="col-6"><button type="button" data-update="0" value=0 id="out_a" class="btn btn-lg btn-block btn-outline-danger"><i class="fas fa-thumbs-down"></i> OUT</button></div>
+						<div class="col-6"><button type="button" data-update="0" value=0 id="in_a" class="btn btn-lg btn-block btn-outline-success btn-dispo"><i class="fas fa-thumbs-up"></i> IN</button></div>
+						<div class="col-6"><button type="button" data-update="0" value=0 id="out_a" class="btn btn-lg btn-block btn-outline-danger btn-dispo"><i class="fas fa-thumbs-down"></i> OUT</button></div>
 					</div>
 				  </div>
 				</div>
 			</div>
 		</div>
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-		<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="scripts/main.js"></script>
 		<script>
+
+			var cookies = [];
+			tmp = document.cookie;
+			tmp = tmp.split('; ');
+			for(var c of tmp){
+				var c = c.split('=');
+				cookies[c[0]] = c[1];
+			}
+			
+			if(cookies['login'] === undefined){
+
+				$("#connexion").modal({
+					keyboard: false
+				});
+			}
 
 			var date = new Date();
 			//CHANGE LOCALHOST WITH SERVER'S DOMAIN
 			var ws = new WebSocket("ws://"+document.location.href.split('/')[2]+":3000");
 			refreshDate();
 
-			function initMaps() {
-        var chanzy = {lat: 49.484892, lng: 0.141091};
-        var batB = {lat: 49.470148, lng: 0.266946};
-
-        var mapA = new google.maps.Map(document.getElementById('mapA'), {
-          center: chanzy,
-          zoom: 7,
-					fullscreenControl : false,
-					mapTypeControl : false,
-					scaleControl : false,
-					streetViewControl : false,
-					zoomControl : false
-        });
-
-				var mapR = new google.maps.Map(document.getElementById('mapR'), {
-          center: batB,
-          zoom: 7,
-					fullscreenControl : false,
-					mapTypeControl : false,
-					scaleControl : false,
-					streetViewControl : false,
-					zoomControl : false
-        });
-
-        var directionsDisplayA = new google.maps.DirectionsRenderer({
-          map: mapA
-        });
-				var directionsDisplayR = new google.maps.DirectionsRenderer({
-          map: mapR
-        });
-
-				var requestA = {
-											  origin: chanzy,
-											  destination: batB,
-												travelMode : 'DRIVING',
-											};
-				var requestR = {
-											  origin: batB,
-											  destination: chanzy,
-												travelMode : 'DRIVING',
-											};
-				var directionsService = new google.maps.DirectionsService;
-
-				directionsService.route(requestA, function(response, status) {
-			    if (status == 'OK') {
-			      directionsDisplayA.setDirections(response);
-			    }
-  			});
-				directionsService.route(requestR, function(response, status) {
-			    if (status == 'OK') {
-			      directionsDisplayR.setDirections(response);
-			    }
-  			});
-
-			}
 		</script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCugGtPV2OHs0oVJmtUT9rGH1VwGY3JjnA&callback=initMaps" async defer></script>
 	</body>

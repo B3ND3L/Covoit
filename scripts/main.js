@@ -16,7 +16,7 @@ gesuredZone.addEventListener('touchend', function(event) {
     handleGesure();
 }, false);
 
-$(".btn").click(function(event){
+$(".btn-dispo").click(function(event){
 
   var tmp = $(this).prop('id').split('_');
   var dispo = tmp[0];
@@ -41,6 +41,18 @@ $(".btn").click(function(event){
 
   ws.send('{"dispo":"'+(dispo=='in'?1:0)+'","time":"'+time+'","date":"'+(date.getFullYear()+"-"+date.getMonth().toString().padStart(2,'0')+"-"+date.getDate())+'","update":'+update+',"event" : "click"}');
 });
+
+$("#connexionButton").click(function(){
+
+  var password = $("#password").val();
+  //HASH PASSWORD HERE
+
+    ws.send('{"event":"connexion", "login":"'+$("#login").val()+'", "password" : "'+password+'"}');
+});
+
+ws.onmessage = function(event){
+  console.log(event.data);
+};
 
 function handleGesure() {
     var swiped = 'swiped: ';
@@ -71,6 +83,62 @@ function handleGesure() {
     if (touchendY == touchstartY) {
         //console.log('tap!');
     }
+}
+
+function initMaps() {
+  var chanzy = {lat: 49.484892, lng: 0.141091};
+  var batB = {lat: 49.470148, lng: 0.266946};
+
+  var mapA = new google.maps.Map(document.getElementById('mapA'), {
+    center: chanzy,
+    zoom: 7,
+    fullscreenControl : false,
+    mapTypeControl : false,
+    scaleControl : false,
+    streetViewControl : false,
+    zoomControl : false
+  });
+
+  var mapR = new google.maps.Map(document.getElementById('mapR'), {
+    center: batB,
+    zoom: 7,
+    fullscreenControl : false,
+    mapTypeControl : false,
+    scaleControl : false,
+    streetViewControl : false,
+    zoomControl : false
+  });
+
+  var directionsDisplayA = new google.maps.DirectionsRenderer({
+    map: mapA
+  });
+  var directionsDisplayR = new google.maps.DirectionsRenderer({
+    map: mapR
+  });
+
+  var requestA = {
+                  origin: chanzy,
+                  destination: batB,
+                  travelMode : 'DRIVING',
+                };
+  var requestR = {
+                  origin: batB,
+                  destination: chanzy,
+                  travelMode : 'DRIVING',
+                };
+  var directionsService = new google.maps.DirectionsService;
+
+  directionsService.route(requestA, function(response, status) {
+    if (status == 'OK') {
+      directionsDisplayA.setDirections(response);
+    }
+  });
+  directionsService.route(requestR, function(response, status) {
+    if (status == 'OK') {
+      directionsDisplayR.setDirections(response);
+    }
+  });
+
 }
 
 function getFullDate(){
