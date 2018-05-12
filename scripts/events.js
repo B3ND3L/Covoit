@@ -3,6 +3,8 @@ var touchstartY = 0;
 var touchendX = 0;
 var touchendY = 0;
 
+var flagComm = true;
+
 var gesuredZone = document.body; //document.getElementById('gesuredZone');
 
 gesuredZone.addEventListener('touchstart', function(event) {
@@ -16,7 +18,7 @@ gesuredZone.addEventListener('touchend', function(event) {
     handleGesure();
 }, false);
 
-$(".btn-dispo").click(function(event){
+$(".btn-dispo").click(function(event, arg){
 
   var tmp = $(this).prop('id').split('_');
   var dispo = tmp[0];
@@ -38,16 +40,17 @@ $(".btn-dispo").click(function(event){
     $("#"+(dispo==="out"?"in":"out")+"_"+time).removeClass('btn-'+((dispo==="out")?"success":"danger")).addClass('btn-outline-'+((dispo==="out")?"success":"danger"));
     $("#"+(dispo==="out"?"in":"out")+"_"+time).val('0');
   }
-
-  var obj = {
-    event : "click",
-    dispo : (dispo=='in'?1:0),
-    user : cookies['userid'],
-    time : time,
-    date : (date.getFullYear()+"-"+date.getMonth().toString().padStart(2,'0')+"-"+date.getDate()),
-    update : update
-  };
-  sendMsg(obj);
+  if(flagComm === true){
+    var obj = {
+      event : "click",
+      dispo : (dispo=='in'?1:0),
+      user : cookies['userid'],
+      time : time,
+      date : (date.getFullYear()+"-"+(date.getMonth()+1).toString().padStart(2,'0')+"-"+date.getDate()),
+      update : update
+    };
+    sendMsg(obj);
+  }
 });
 
 $("#connexionButton").click(function(){

@@ -10,6 +10,8 @@ for(var c of tmp){
 
 
 date = new Date();
+date.setHours(0,0,0);
+date.setMilliseconds(0);
 refreshDate();
 
 document.addEventListener("DOMContentLoaded", function(event) {

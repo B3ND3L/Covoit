@@ -23,6 +23,12 @@ ws.onmessage = function(event){
         exp.setDate(exp.getDay()+30);
         document.cookie = "userid="+data.idUser+"; expires="+exp.toUTCString()+"; path=/";;
         document.cookie = "username="+$("#login").val()+"; expires="+exp.toUTCString()+"; path=/";
+        var obj = {
+          event : "participations",
+          user : cookies['userid'],
+          date : (date.getFullYear()+"-"+date.getMonth().toString().padStart(2,'0')+"-"+date.getDate())
+        };
+        sendMsg(obj);
         $("#connexion").modal('hide');
       } else {
         $("#login").val('');
@@ -32,6 +38,20 @@ ws.onmessage = function(event){
     case 'participations':
       console.log(data.Datas);
       participations = data.Datas;
+      for(p of participations){
+        p.date = new Date(p.date);
+        console.log("js = " + date.getTime());
+        console.log("sql = " + p.date.getTime());
+        if(date.getTime() === p.date.getTime()){
+          flagComm = false;
+          if(p.participe){
+            $("#in_"+p.periode).click();
+          }else{
+            $("#out_"+p.periode).click();
+          }
+          flagComm = true;
+        }
+      }
       break;
     default : console.log("Unknown event");break;
   }
