@@ -36,24 +36,38 @@ wss.on('connection', function(client) {
 			return 0;
     }
     console.log(data);
-
-
 		switch(data.event){
+
 			case 'click' :
 					var sql = '';
 					if(data.update === 1){
-						sql = "UPDATE Participations SET participe="+data.dispo+" WHERE idUser=1 AND periode='"+data.time+"' AND date='"+data.date+"'";
+						sql = "UPDATE Participations SET participe="+data.dispo+" WHERE idUser="+data.user+" AND periode='"+data.time+"' AND date='"+data.date+"'";
 					} else {
-						sql = "INSERT INTO Participations (idUser, periode, date, participe) VALUES (1,'"+data.time+"','"+data.date+"',"+data.dispo+")";
+						sql = "INSERT INTO Participations (idUser, periode, date, participe) VALUES ("+data.user+",'"+data.time+"','"+data.date+"',"+data.dispo+")";
 					}
 					con.query(sql, function (err, result) {
 						if (err) throw err;
-						console.log(result);
 					});
 				break;
-			case 'connexion' : 
-				console.log('connexion faite');
-				client.send('{"Reponse" : "OK"}')
+			case 'connexion' :
+
+				sql = "SELECT * FROM Users WHERE nom='"+data.login+"' AND pass='"+data.password+"'";
+				con.query(sql, function (err, result) {
+					if (err) throw err;
+					if(result[0] !== undefined){
+						client.send('{"Status" : 1, "Event":"connexion", "idUser" : '+result[0].id+'}');
+					} else {
+						client.send('{"Status" : 0, "Event":"connexion"}');
+					}
+				});
+				break;
+			case 'participations' :
+
+				sql = "SELECT periode, date, participe FROM Participations WHERE idUser="+data.user+" AND date >="+data.date;
+				con.query(sql, function (err, result) {
+					if (err) throw err;
+					client.send('{"Event" : "participations", "Datas" : '+JSON.stringify(result)+'}');
+				});
 				break;
 		}
   });

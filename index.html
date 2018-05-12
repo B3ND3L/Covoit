@@ -87,29 +87,10 @@
 		<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-		<script src="scripts/main.js"></script>
-		<script>
-
-			var cookies = [];
-			tmp = document.cookie;
-			tmp = tmp.split('; ');
-			for(var c of tmp){
-				var c = c.split('=');
-				cookies[c[0]] = c[1];
-			}
-			
-			if(cookies['login'] === undefined){
-
-				$("#connexion").modal({
-					keyboard: false,
-					backdrop : 'static'
-				});
-			}
-
-			var date = new Date();
-			refreshDate();
-
-		</script>
+		<script src="scripts/comm.js"></script>
+		<script src="scripts/crypto-js.js"></script>
+		<script src="scripts/events.js"></script>
+		<script src="scripts/ignition.js"></script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCugGtPV2OHs0oVJmtUT9rGH1VwGY3JjnA&callback=initMaps" async defer></script>
 	</body>
 </html>

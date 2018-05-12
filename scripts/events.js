@@ -3,8 +3,6 @@ var touchstartY = 0;
 var touchendX = 0;
 var touchendY = 0;
 
-var ws = new WebSocket("ws://"+document.location.href.split('/')[2]+":3000");
-
 var gesuredZone = document.body; //document.getElementById('gesuredZone');
 
 gesuredZone.addEventListener('touchstart', function(event) {
@@ -41,20 +39,32 @@ $(".btn-dispo").click(function(event){
     $("#"+(dispo==="out"?"in":"out")+"_"+time).val('0');
   }
 
-  ws.send('{"dispo":"'+(dispo=='in'?1:0)+'","time":"'+time+'","date":"'+(date.getFullYear()+"-"+date.getMonth().toString().padStart(2,'0')+"-"+date.getDate())+'","update":'+update+',"event" : "click"}');
+  var obj = {
+    event : "click",
+    dispo : (dispo=='in'?1:0),
+    user : cookies['userid'],
+    time : time,
+    date : (date.getFullYear()+"-"+date.getMonth().toString().padStart(2,'0')+"-"+date.getDate()),
+    update : update
+  };
+  sendMsg(obj);
 });
 
 $("#connexionButton").click(function(){
 
   var password = $("#password").val();
   //HASH PASSWORD HERE
+  password = CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
 
-    ws.send('{"event":"connexion", "login":"'+$("#login").val()+'", "password" : "'+password+'"}');
+  var obj = {
+    event : "connexion",
+    login : $("#login").val(),
+    password : password
+  };
+  sendMsg(obj);
 });
 
-ws.onmessage = function(event){
-  console.log(event.data);
-};
+
 
 function handleGesure() {
     var swiped = 'swiped: ';
@@ -85,62 +95,6 @@ function handleGesure() {
     if (touchendY == touchstartY) {
         //console.log('tap!');
     }
-}
-
-function initMaps() {
-  var chanzy = {lat: 49.484892, lng: 0.141091};
-  var batB = {lat: 49.470148, lng: 0.266946};
-
-  var mapA = new google.maps.Map(document.getElementById('mapA'), {
-    center: chanzy,
-    zoom: 7,
-    fullscreenControl : false,
-    mapTypeControl : false,
-    scaleControl : false,
-    streetViewControl : false,
-    zoomControl : false
-  });
-
-  var mapR = new google.maps.Map(document.getElementById('mapR'), {
-    center: batB,
-    zoom: 7,
-    fullscreenControl : false,
-    mapTypeControl : false,
-    scaleControl : false,
-    streetViewControl : false,
-    zoomControl : false
-  });
-
-  var directionsDisplayA = new google.maps.DirectionsRenderer({
-    map: mapA
-  });
-  var directionsDisplayR = new google.maps.DirectionsRenderer({
-    map: mapR
-  });
-
-  var requestA = {
-                  origin: chanzy,
-                  destination: batB,
-                  travelMode : 'DRIVING',
-                };
-  var requestR = {
-                  origin: batB,
-                  destination: chanzy,
-                  travelMode : 'DRIVING',
-                };
-  var directionsService = new google.maps.DirectionsService;
-
-  directionsService.route(requestA, function(response, status) {
-    if (status == 'OK') {
-      directionsDisplayA.setDirections(response);
-    }
-  });
-  directionsService.route(requestR, function(response, status) {
-    if (status == 'OK') {
-      directionsDisplayR.setDirections(response);
-    }
-  });
-
 }
 
 function getFullDate(){
