@@ -1,30 +1,64 @@
-var http = require('http'),
-	mysql = require('mysql'),
-	WebSocket = require('ws'),
-	WebSocketServer = WebSocket.Server;
+var express = require('express'),
+	mysql = require('mysql')
+const server = express();
+const port = 3000;
 
-var server = http.createServer();
-server.listen('3000', '0.0.0.0', function() {
-  console.log('Listening on ' + server.address().address + ':' + server.address().port);
-});
 
 //BDD covoiturage & bB9XbJkAPAWkNKfD
 
-var con = mysql.createConnection({
+var mysql = mysql.createConnection({
   host: "localhost",
   user: "covoiturage",
   password: "bB9XbJkAPAWkNKfD",
   database: "covoiturage"
 });
 
-var wss = new WebSocketServer({
-	server: server
-});
-
-con.connect(function(err) {
+mysql.connect(function(err) {
 	if (err) throw err;
 	console.log("Connected!");
 });
+
+server.listen(port, function(){
+	console.log('Listening on port '+port);
+});
+
+
+
+server.route('/participations')
+		.get(function(req, res){
+
+			/*
+			
+			sql = "SELECT periode, date, participe FROM Participations WHERE idUser="+data.user+" AND date >="+data.date;
+			mysql.query(sql, function (err, result) {
+				if (err) throw err;
+				client.send('{"Event" : "participations", "Datas" : '+JSON.stringify(result)+'}');
+			});
+			*/
+		}).post(function(req,res){
+
+			/*
+			sql = "INSERT INTO Participations (idUser, periode, date, participe) VALUES ("+data.user+",'"+data.time+"','"+data.date+"',"+data.dispo+")";
+			mysql.query(sql, function (err, result) {
+				if (err) throw err;
+			});
+			
+			*/
+		}).put(function(req,res){
+			/*
+			
+			sql = "UPDATE Participations SET participe="+data.dispo+" WHERE idUser="+data.user+" AND periode='"+data.time+"' AND date='"+data.date+"'";
+			mysql.query(sql, function (err, result) {
+				if (err) throw err;
+			});
+			*/
+		});
+
+
+
+
+
+
 
 wss.on('connection', function(client) {
 	client.on('message', function(message) {
@@ -45,14 +79,14 @@ wss.on('connection', function(client) {
 					} else {
 						sql = "INSERT INTO Participations (idUser, periode, date, participe) VALUES ("+data.user+",'"+data.time+"','"+data.date+"',"+data.dispo+")";
 					}
-					con.query(sql, function (err, result) {
+					mysql.query(sql, function (err, result) {
 						if (err) throw err;
 					});
 				break;
 			case 'connexion' :
 
 				sql = "SELECT * FROM Users WHERE nom='"+data.login+"' AND pass='"+data.password+"'";
-				con.query(sql, function (err, result) {
+				mysql.query(sql, function (err, result) {
 					if (err) throw err;
 					if(result[0] !== undefined){
 						client.send('{"Status" : 1, "Event":"connexion", "idUser" : '+result[0].id+'}');
@@ -63,11 +97,7 @@ wss.on('connection', function(client) {
 				break;
 			case 'participations' :
 
-				sql = "SELECT periode, date, participe FROM Participations WHERE idUser="+data.user+" AND date >="+data.date;
-				con.query(sql, function (err, result) {
-					if (err) throw err;
-					client.send('{"Event" : "participations", "Datas" : '+JSON.stringify(result)+'}');
-				});
+				
 				break;
 		}
   });
